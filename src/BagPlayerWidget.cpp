@@ -8,8 +8,8 @@
 
 #include "ui_BagPlayerWidget.h"
 
-#define INCREASE_PLAYBACK_SPEED 0.5
-#define DECREASE_PLAYBACK_SPEED -0.5
+#define INCREASE_PLAYBACK_SPEED 0.1
+#define DECREASE_PLAYBACK_SPEED -0.1
 
 namespace rosbag_rviz_panel {
 
@@ -36,8 +36,8 @@ BagPlayerWidget::BagPlayerWidget(QWidget* parent) : QWidget(parent), _ui(std::ma
     _ui->play_button->setIcon(QIcon::fromTheme("media-playback-start"));
     _ui->begin_button->setIcon(QIcon::fromTheme("media-skip-backward"));
     _ui->end_button->setIcon(QIcon::fromTheme("media-skip-forward"));
-    _ui->slower_button->setIcon(QIcon::fromTheme("media-seek-backward"));
-    _ui->faster_button->setIcon(QIcon::fromTheme("media-seek-forward"));
+    _ui->slower_button->setIcon(QIcon::fromTheme("go-down-skip"));
+    _ui->faster_button->setIcon(QIcon::fromTheme("go-up-skip"));
     _ui->load_button->setIcon(QIcon::fromTheme("document-open"));
 
     connect(_ui->play_button, &QPushButton::clicked, this, &BagPlayerWidget::handlePlayClicked);
@@ -90,7 +90,7 @@ void BagPlayerWidget::handleLoadClicked(void)
             this,
             tr("Select the file to load"),
             QDir::homePath(),
-            tr("SQLite3 file (*.db3)"),
+            tr("MCAP file (*.mcap)"),
             nullptr,
             QFileDialog::DontUseNativeDialog);
 

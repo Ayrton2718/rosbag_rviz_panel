@@ -10,6 +10,7 @@
 #include <rosbag2_cpp/converter_options.hpp>
 #include <rosbag2_cpp/readers/sequential_reader.hpp>
 #include <rosbag2_cpp/storage_options.hpp>
+#include <rosgraph_msgs/msg/clock.hpp>
 #include <string>
 #include <thread>
 
@@ -266,6 +267,8 @@ class QBagPlayer : public QObject
     std::shared_ptr<rcpputils::SharedLibrary>                          _library_generic_publisher;
     std::unique_ptr<rosbag2_cpp::readers::SequentialReader>            _reader;
     std::unordered_map<std::string, std::shared_ptr<GenericPublisher>> _pubs;
+
+    rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr _clock_publisher;
 
     rosbag2_cpp::StorageOptions   _storage_options;
     rosbag2_cpp::ConverterOptions _converter_options;

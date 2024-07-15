@@ -5,8 +5,8 @@
 #include <QDateTime>
 #include <rosbag2_cpp/typesupport_helpers.hpp>
 
-#define MAX_PLAYBACK_SPEED 10.0
-#define MIN_PLAYBACK_SPEED 0.5
+#define MAX_PLAYBACK_SPEED 5.0
+#define MIN_PLAYBACK_SPEED 0.1
 
 namespace {
 rcl_publisher_options_t rosbag2_get_publisher_options(const rclcpp::QoS& qos)
@@ -43,8 +43,9 @@ QBagPlayer::QBagPlayer(QObject* parent) : QObject(parent)
 {
     _nh     = std::make_shared<rclcpp::Node>("QBagPlayer");
     _reader = std::make_unique<rosbag2_cpp::readers::SequentialReader>();
+    _clock_publisher = _nh->create_publisher<rosgraph_msgs::msg::Clock>("/clock", rclcpp::ClockQoS());
 
-    _storage_options.storage_id                    = "sqlite3";
+    _storage_options.storage_id                    = "mcap";
     _converter_options.input_serialization_format  = "cdr";
     _converter_options.output_serialization_format = "cdr";
 }
@@ -333,6 +334,10 @@ void QBagPlayer::run(void)
             }
 
             std::this_thread::sleep_until(realTimeDuration(m->time_stamp));
+
+            rosgraph_msgs::msg::Clock clock_msg;
+            clock_msg.clock = rclcpp::Time(m->time_stamp);
+            _clock_publisher->publish(clock_msg);
 
             _last_message_time = std::chrono::nanoseconds(m->time_stamp);
             _pubs[m->topic_name]->publish(m->serialized_data);
