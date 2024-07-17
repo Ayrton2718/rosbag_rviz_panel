@@ -209,7 +209,7 @@ void QBagPlayer::receiveSetPause(void)
         _play_thread.join();
 
         if (!_storage_options.uri.empty())
-            _reader->open(_storage_options, _converter_options);
+            _reader->seek(_full_bag_start.count());
     }
 }
 
@@ -321,6 +321,7 @@ void QBagPlayer::run(void)
                 continue;
 
             if (m->time_stamp < _bag_control_start.count() || m->time_stamp > _bag_control_end.count()) {
+                _reader->seek(_bag_control_start.count());
                 RCLCPP_DEBUG_STREAM(_nh->get_logger(), "Timestamp not in range: " << m->time_stamp * 1e-9);
                 continue;
             }
