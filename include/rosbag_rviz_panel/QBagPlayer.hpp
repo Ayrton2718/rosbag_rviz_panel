@@ -270,7 +270,7 @@ class QBagPlayer : public QObject
 
     rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr _clock_publisher;
 
-    rosbag2_cpp::StorageOptions   _storage_options;
+    rosbag2_storage::StorageOptions   _storage_options;
     rosbag2_cpp::ConverterOptions _converter_options;
 
     std::thread                                        _play_thread;
