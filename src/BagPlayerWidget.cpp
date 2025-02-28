@@ -63,6 +63,32 @@ BagPlayerWidget::~BagPlayerWidget()
         _progress_bar.reset();
 }
 
+bool BagPlayerWidget::initialize_load_bag(const QFileInfo filename)
+{
+    if (filename.exists()) {
+        try {
+            Q_EMIT sendLoadBag(filename.absoluteFilePath());
+            return true;
+
+        } catch (const std::runtime_error& e) {
+            RCLCPP_WARN_STREAM(rclcpp::get_logger("global_logger"), e.what());
+
+            receiveStatusText(QString::fromStdString(e.what()));
+            receiveEnableActionButtons(false);
+            return false;
+        }
+    } else {
+        std::string msg = "File: '" + filename.absoluteFilePath().toStdString() + "' does not exists!";
+        RCLCPP_WARN_STREAM(rclcpp::get_logger("global_logger"), msg);
+        return false;
+    }
+}
+
+
+void BagPlayerWidget::start_playing(void){
+    this->sendStartPlaying();
+}
+
 void BagPlayerWidget::handlePlayClicked(const bool checked)
 {
     if (checked) {
@@ -94,20 +120,7 @@ void BagPlayerWidget::handleLoadClicked(void)
             nullptr,
             QFileDialog::DontUseNativeDialog);
 
-    if (filename.exists()) {
-        try {
-            Q_EMIT sendLoadBag(filename.absoluteFilePath());
-
-        } catch (const std::runtime_error& e) {
-            RCLCPP_WARN_STREAM(rclcpp::get_logger("global_logger"), e.what());
-
-            receiveStatusText(QString::fromStdString(e.what()));
-            receiveEnableActionButtons(false);
-        }
-    } else {
-        std::string msg = "File: '" + filename.absoluteFilePath().toStdString() + "' does not exists!";
-        RCLCPP_WARN_STREAM(rclcpp::get_logger("global_logger"), msg);
-    }
+    initialize_load_bag(filename);
 }
 
 void BagPlayerWidget::receiveFileSizeLabel(const QString size)

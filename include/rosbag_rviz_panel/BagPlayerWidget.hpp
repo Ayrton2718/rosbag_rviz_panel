@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+#include <QFileInfo>
 #include <QThread>
 #include <QWidget>
 
@@ -36,6 +37,9 @@ class BagPlayerWidget : public QWidget
      * @brief Destructor of the BagPlayerWidget class.
      */
     virtual ~BagPlayerWidget();
+
+    bool initialize_load_bag(const QFileInfo file);
+    void start_playing(void);
 
   private:
     /**
