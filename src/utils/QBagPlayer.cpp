@@ -336,9 +336,12 @@ void QBagPlayer::run(void)
 
             std::this_thread::sleep_until(realTimeDuration(m->time_stamp));
 
-            rosgraph_msgs::msg::Clock clock_msg;
-            clock_msg.clock = rclcpp::Time(m->time_stamp);
-            _clock_publisher->publish(clock_msg);
+            if(_befor_clock != m->time_stamp){
+                rosgraph_msgs::msg::Clock clock_msg;
+                clock_msg.clock = rclcpp::Time(m->time_stamp);
+                _clock_publisher->publish(clock_msg);
+                _befor_clock = m->time_stamp;
+            }
 
             _last_message_time = std::chrono::nanoseconds(m->time_stamp);
             _pubs[m->topic_name]->publish(m->serialized_data);

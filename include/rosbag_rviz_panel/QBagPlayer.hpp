@@ -268,6 +268,7 @@ class QBagPlayer : public QObject
     std::unique_ptr<rosbag2_cpp::readers::SequentialReader>            _reader;
     std::unordered_map<std::string, std::shared_ptr<GenericPublisher>> _pubs;
 
+    rcutils_time_point_value_t                              _befor_clock;
     rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr _clock_publisher;
 
     rosbag2_storage::StorageOptions   _storage_options;
